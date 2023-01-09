@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  db:
+    container_name: drone_db
+    image: postgres:12.8-alpine
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: drone-srv
+      POSTGRES_PASSWORD: drone-srv
+      POSTGRES_DB: drone-srv
+    labels:
+      NAME: test-postgres-db
