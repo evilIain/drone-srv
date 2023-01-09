@@ -9,7 +9,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.UUID;
 
 @Builder
 @Getter
@@ -24,7 +23,7 @@ public class DroneEntity {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "uuid2")
-    private UUID id;
+    private String id;
 
     @NotBlank
     @Column(name = "serial_number")
@@ -48,7 +47,7 @@ public class DroneEntity {
     private State state;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "drone")
+    @OneToMany(mappedBy = "drone", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<MedicationEntity> medications;
 }
 

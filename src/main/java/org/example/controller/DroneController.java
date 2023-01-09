@@ -1,7 +1,9 @@
 package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.dto.in.LoadDroneRequest;
 import org.example.dto.in.RegisterDroneRequest;
+import org.example.dto.out.LoadDroneResponse;
 import org.example.dto.out.RegisterDroneResponse;
 import org.example.service.DroneProcessingService;
 import org.springframework.http.HttpStatus;
@@ -20,5 +22,11 @@ public class DroneController {
     @PostMapping
     public RegisterDroneResponse registerDrone(@Valid @RequestBody RegisterDroneRequest request) {
         return droneProcessingService.registerDrone(request);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/{droneId}")
+    public LoadDroneResponse loadDroneWithMedications(@RequestBody LoadDroneRequest request, @PathVariable String droneId) {
+        return droneProcessingService.loadDroneWithMedications(request, droneId);
     }
 }

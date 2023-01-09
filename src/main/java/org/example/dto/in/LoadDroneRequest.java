@@ -1,4 +1,15 @@
 package org.example.dto.in;
 
-public class LoadDroneRequest {
+import lombok.Builder;
+import org.example.dto.Medication;
+
+import java.util.List;
+
+public record LoadDroneRequest(
+        List<Medication> medications
+) {
+
+    @Builder
+    public LoadDroneRequest {
+    }
 }
