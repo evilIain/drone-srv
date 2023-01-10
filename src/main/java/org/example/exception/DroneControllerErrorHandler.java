@@ -34,7 +34,7 @@ public class DroneControllerErrorHandler extends ResponseEntityExceptionHandler 
                 .stream()
                 .map(error -> new ErrorResponse.Error(status.value(), error.getField() + FIELD_ERROR_SEPARATOR + error.getDefaultMessage()))
                 .collect(Collectors.toList());
-        ErrorResponse errorResponse = new ErrorResponse(status.name(), errorList);
+        ErrorResponse errorResponse = new ErrorResponse("Validation Error", errorList);
         return handleExceptionInternal(ex, errorResponse, headers, status, request);
     }
 

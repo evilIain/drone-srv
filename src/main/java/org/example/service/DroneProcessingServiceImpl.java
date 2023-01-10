@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.converter.DroneMapper;
 import org.example.dto.in.LoadDroneRequest;
 import org.example.dto.in.RegisterDroneRequest;
+import org.example.dto.out.BaseDroneResponse;
+import org.example.dto.out.GetLoadedMedicationsResponse;
 import org.example.dto.out.LoadDroneResponse;
 import org.example.dto.out.RegisterDroneResponse;
 import org.example.entity.DroneEntity;
@@ -49,5 +51,28 @@ public class DroneProcessingServiceImpl implements DroneProcessingService {
         }
 
         return droneMapper.toLoadDroneResponse(dbDroneEntity);
+    }
+
+    @Override
+    public GetLoadedMedicationsResponse getLoadedMedications(String droneId) {
+        Optional<DroneEntity> optionalDroneEntity = droneService.getById(droneId);
+
+        if (optionalDroneEntity.isEmpty()) {
+            throw new NotFoundException("Drone with id: " + droneId + " was not found");
+        }
+
+        DroneEntity dbDroneEntity = optionalDroneEntity.get();
+        List<MedicationEntity> currentMedications = dbDroneEntity.getMedications();
+
+        return GetLoadedMedicationsResponse.builder()
+                .medications(droneMapper.toMedications(currentMedications))
+                .build();
+    }
+
+    @Override
+    public List<BaseDroneResponse> getAvailableDrones() {
+        List<DroneEntity> availableDroneEntities = droneService.getAvailableDrones();
+
+        return droneMapper.toDroneBaseResponseList(availableDroneEntities);
     }
 }

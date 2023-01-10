@@ -1,8 +1,11 @@
 package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
+
 import org.example.dto.in.LoadDroneRequest;
 import org.example.dto.in.RegisterDroneRequest;
+import org.example.dto.out.BaseDroneResponse;
+import org.example.dto.out.GetLoadedMedicationsResponse;
 import org.example.dto.out.LoadDroneResponse;
 import org.example.dto.out.RegisterDroneResponse;
 import org.example.service.DroneProcessingService;
@@ -10,23 +13,36 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1.0/drone")
+@RequestMapping("/api/v1.0")
 @RequiredArgsConstructor
 public class DroneController {
 
     private final DroneProcessingService droneProcessingService;
 
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping
+    @PostMapping("/drone")
     public RegisterDroneResponse registerDrone(@Valid @RequestBody RegisterDroneRequest request) {
         return droneProcessingService.registerDrone(request);
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/{droneId}")
+    @PostMapping("/drone/{droneId}")
     public LoadDroneResponse loadDroneWithMedications(@RequestBody LoadDroneRequest request, @PathVariable String droneId) {
         return droneProcessingService.loadDroneWithMedications(request, droneId);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/drone/{droneId}")
+    public GetLoadedMedicationsResponse getLoadedMedications(@PathVariable String droneId) {
+        return droneProcessingService.getLoadedMedications(droneId);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/drones")
+    public List<BaseDroneResponse> getAvailableDrones() {
+        return droneProcessingService.getAvailableDrones();
     }
 }

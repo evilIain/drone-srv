@@ -46,7 +46,6 @@ public class DroneEntity {
     @Column(name = "state")
     private State state;
 
-    @ToString.Exclude
     @OneToMany(mappedBy = "drone", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<MedicationEntity> medications;
 }

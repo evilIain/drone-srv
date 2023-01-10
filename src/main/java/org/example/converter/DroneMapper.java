@@ -2,6 +2,7 @@ package org.example.converter;
 
 import org.example.dto.Medication;
 import org.example.dto.in.RegisterDroneRequest;
+import org.example.dto.out.BaseDroneResponse;
 import org.example.dto.out.LoadDroneResponse;
 import org.example.dto.out.RegisterDroneResponse;
 import org.example.entity.DroneEntity;
@@ -22,9 +23,15 @@ public interface DroneMapper {
     })
     DroneEntity toDroneEntity(RegisterDroneRequest request);
 
+    BaseDroneResponse toDroneBaseResponse(DroneEntity droneEntity);
+
+    List<BaseDroneResponse> toDroneBaseResponseList(List<DroneEntity> droneEntities);
+
     RegisterDroneResponse toRegisterDroneResponse(DroneEntity droneEntity);
 
     LoadDroneResponse toLoadDroneResponse(DroneEntity droneEntity);
+
+    List<Medication> toMedications(List<MedicationEntity> medicationEntities);
 
     MedicationEntity toMedicationEntity(Medication medication);
 

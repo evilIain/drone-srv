@@ -14,4 +14,6 @@ public interface DroneService {
     Optional<DroneEntity> getById(String droneId);
 
     DroneEntity loadDroneWithMedications(DroneEntity droneEntity, List<MedicationEntity> medicationEntities);
+
+    List<DroneEntity> getAvailableDrones();
 }

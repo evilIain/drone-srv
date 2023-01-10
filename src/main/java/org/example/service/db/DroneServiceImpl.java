@@ -49,4 +49,10 @@ public class DroneServiceImpl implements DroneService {
 
         return droneRepository.save(droneEntity);
     }
+
+    @Override
+    public List<DroneEntity> getAvailableDrones() {
+
+        return droneRepository.findAllByStateInAndBatteryCapacityGreaterThan(List.of(State.IDLE, State.LOADING), 25);
+    }
 }

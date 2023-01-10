@@ -38,6 +38,7 @@ public class MedicationEntity {
     @Column(name = "image")
     private byte[] image;
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "drone_id")
     private DroneEntity drone;
