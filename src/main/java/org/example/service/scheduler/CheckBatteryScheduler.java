@@ -22,7 +22,7 @@ public class CheckBatteryScheduler {
 
     private final DroneRepository droneRepository;
 
-    @Scheduled(fixedRate = 10, timeUnit = TimeUnit.SECONDS)
+    @Scheduled(fixedRate = 1, timeUnit = TimeUnit.HOURS)
     public void checkBattery() {
 
         log.info("Running scheduled task: checkBattery");
