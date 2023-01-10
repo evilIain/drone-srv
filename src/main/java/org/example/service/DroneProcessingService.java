@@ -2,10 +2,7 @@ package org.example.service;
 
 import org.example.dto.in.LoadDroneRequest;
 import org.example.dto.in.RegisterDroneRequest;
-import org.example.dto.out.BaseDroneResponse;
-import org.example.dto.out.GetLoadedMedicationsResponse;
-import org.example.dto.out.LoadDroneResponse;
-import org.example.dto.out.RegisterDroneResponse;
+import org.example.dto.out.*;
 
 import java.util.List;
 
@@ -18,4 +15,6 @@ public interface DroneProcessingService {
     GetLoadedMedicationsResponse getLoadedMedications(String droneId);
 
     List<BaseDroneResponse> getAvailableDrones();
+
+    CheckDroneBatteryResponse getDroneBatteryCapacity(String droneId);
 }

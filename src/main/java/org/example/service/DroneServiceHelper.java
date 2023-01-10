@@ -4,12 +4,10 @@ import org.example.dto.Medication;
 import org.example.entity.DroneEntity;
 import org.example.entity.MedicationEntity;
 import org.example.exception.type.LowBatteryException;
-import org.example.exception.type.NotFoundException;
 import org.example.exception.type.WeightLimitException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DroneServiceHelper {

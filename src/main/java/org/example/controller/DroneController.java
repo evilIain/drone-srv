@@ -1,13 +1,9 @@
 package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
-
 import org.example.dto.in.LoadDroneRequest;
 import org.example.dto.in.RegisterDroneRequest;
-import org.example.dto.out.BaseDroneResponse;
-import org.example.dto.out.GetLoadedMedicationsResponse;
-import org.example.dto.out.LoadDroneResponse;
-import org.example.dto.out.RegisterDroneResponse;
+import org.example.dto.out.*;
 import org.example.service.DroneProcessingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -44,5 +40,11 @@ public class DroneController {
     @GetMapping("/drones")
     public List<BaseDroneResponse> getAvailableDrones() {
         return droneProcessingService.getAvailableDrones();
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/drone/{droneId}/battery")
+    public CheckDroneBatteryResponse getDroneBatteryCapacity(@PathVariable String droneId) {
+        return droneProcessingService.getDroneBatteryCapacity(droneId);
     }
 }

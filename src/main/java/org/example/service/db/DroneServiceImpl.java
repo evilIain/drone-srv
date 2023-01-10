@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.entity.DroneEntity;
 import org.example.entity.MedicationEntity;
 import org.example.enums.State;
+import org.example.exception.type.NotFoundException;
 import org.example.repository.DroneRepository;
 import org.example.service.DroneServiceHelper;
 import org.springframework.stereotype.Service;
@@ -29,8 +30,14 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public Optional<DroneEntity> getById(String droneId) {
-        return droneRepository.findById(droneId);
+    public DroneEntity getById(String droneId) {
+        Optional<DroneEntity> optionalDroneEntity = droneRepository.findById(droneId);
+
+        if (optionalDroneEntity.isEmpty()) {
+            throw new NotFoundException("Drone with id: " + droneId + " was not found");
+        }
+
+        return optionalDroneEntity.get();
     }
 
     @Override
