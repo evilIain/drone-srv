@@ -1,72 +1,180 @@
 ## Drones
 
-[[_TOC_]]
-
----
-
-:scroll: **START**
-
 
 ### Introduction
 
-There is a major new technology that is destined to be a disruptive force in the field of transportation: **the drone**. Just as the mobile phone allowed developing countries to leapfrog older technologies for personal communication, the drone has the potential to leapfrog traditional transportation infrastructure.
+Start application
 
-Useful drone functions include delivery of small items that are (urgently) needed in locations with difficult access.
+```
+mvn clean install -DskipTests
+```
 
----
+Run Tests:
 
-### Task description
+1. Install and start Docker (any version, was tested on 4.15.0)
+2. Run tests
 
-We have a fleet of **10 drones**. A drone is capable of carrying devices, other than cameras, and capable of delivering small loads. For our use case **the load is medications**.
+To start application:
 
-A *Drone* has:
-- serial number (100 characters max);
-- model (Lightweight, Middleweight, Cruiserweight, Heavyweight);
-- weight limit (500gr max);
-- battery capacity (percentage);
-- state (IDLE, LOADING, LOADED, DELIVERING, DELIVERED, RETURNING).
-
-Each **Medication** has: 
-- name (allowed only letters, numbers, ‘-‘, ‘_’);
-- weight;
-- code (allowed only upper case letters, underscore and numbers);
-- image (picture of the medication case).
-
-Develop a service via REST API that allows clients to communicate with the drones (i.e. **dispatch controller**). The specific communicaiton with the drone is outside the scope of this task. 
-
-The service should allow:
-- registering a drone;
-- loading a drone with medication items;
-- checking loaded medication items for a given drone; 
-- checking available drones for loading;
-- check drone battery level for a given drone;
-
-> Feel free to make assumptions for the design approach. 
+1. Compose docker image from docker-compose.yml.
+    Go to directory src/test/resources and run command ```docker-compose up -d```
+2. Start application with "local" profile active.
+   ```-Dspring.profiles.active=local``` or simply point local in latest Intellij IDEA versions in Spring Boot application start.
 
 ---
 
-### Requirements
+### How to use
 
-While implementing your solution **please take care of the following requirements**: 
+Method ```registerDrone POST "/api/v1.0/drone"```:
 
-#### Functional requirements
+Input:
 
-- There is no need for UI;
-- Prevent the drone from being loaded with more weight that it can carry;
-- Prevent the drone from being in LOADING state if the battery level is **below 25%**;
-- Introduce a periodic task to check drones battery levels and create history/audit event log for this.
+```
+{
+    "serialNumber": "ABCD1234",
+    "model": "Lightweight",
+    "weightLimit": 500,
+    "batteryCapacity": 100
+}
+```
+
+Output:
+
+```
+{
+    "id": "fd6bd5c9-0f21-49ce-9a29-b65aeec3314c",
+    "serialNumber": "ABCD1234",
+    "model": "Lightweight",
+    "weightLimit": 500,
+    "batteryCapacity": 100,
+    "state": "IDLE"
+}
+```
 
 ---
 
-#### Non-functional requirements
+Method ```loadMedications POST "/api/v1.0/drone/{droneId}"```:
 
-- Input/output data must be in JSON format;
-- Your project must be buildable and runnable;
-- Your project must have a README file with build/run/test instructions (use DB that can be run locally, e.g. in-memory, via container);
-- Required data must be preloaded in the database.
-- JUnit tests are optional but advisable (if you have time);
-- Advice: Show us how you work through your commit history.
+Input: List of Medication object: name, weight, code, image. 
+All validation constraints are checked and will throw exception if violated.
+
+Input:
+
+```
+{
+   "medications": [
+       {
+           "name": "Bandage",
+           "weight": 90,
+           "code": "12345_ADS"
+       }
+   ]
+}
+```
+
+Output:
+
+```
+{
+    {
+    "id": "fd6bd5c9-0f21-49ce-9a29-b65aeec3314c",
+    "serialNumber": "ABCD1234",
+    "model": "Lightweight",
+    "weightLimit": 500,
+    "batteryCapacity": 100,
+    "state": "LOADING",
+    "medications": [
+        {
+            "name": "Bandage",
+            "weight": 90,
+            "code": "12345_ADS"
+        }
+    ]
+}
+}
+```
 
 ---
 
-:scroll: **END** 
+Method ```getLoadedMedications GET "/api/v1.0/drone/{droneId}"```:
+
+Output:
+
+```
+{
+    "medications": [
+        {
+            "name": "Bandage",
+            "weight": 90,
+            "code": "12345ads"
+        },
+        {
+            "name": "Bandage",
+            "weight": 90,
+            "code": "12345ads"
+        },
+        {
+            "name": "Bandage",
+            "weight": 90,
+            "code": "12345_ADS"
+        }
+    ]
+}
+```
+
+---
+
+---
+
+Method ```getAvailableDrones GET "/api/v1.0/drones"```
+
+Prints drones that are in IDLE or LOADING state and have more than 25% battery charge.
+
+Output:
+
+```
+[
+    {
+        "id": "b52e7b4e-5925-46eb-b332-d5c4ef70a800",
+        "serialNumber": "ABCD1234",
+        "weightLimit": 400,
+        "batteryCapacity": 100,
+        "state": "LOADING"
+    },
+    {
+        "id": "fd6bd5c9-0f21-49ce-9a29-b65aeec3314c",
+        "serialNumber": "ABCD1234",
+        "weightLimit": 500,
+        "batteryCapacity": 100,
+        "state": "LOADING"
+    }
+]
+```
+
+---
+
+Method ```getDroneBatteryCapacity GET "/api/v1.0/drone/{droneId}/battery"```
+
+Prints droneId and batteryCapacity.
+
+Output:
+
+```
+{
+    "id": "fd6bd5c9-0f21-49ce-9a29-b65aeec3314c",
+    "batteryCapacity": 100
+}
+```
+
+---
+
+Scheduler for checking battery capacity runs every hour and scans all drones. Located in service/scheduler directory.
+Prints log to file and duplicates it to console. 
+If needed print to file can be turned off and console print be used in external log viewer like Kibana.
+
+---
+
+### Tests
+
+There are positive and negative test scenarios, including validation violation.
+To run tests Testcontainers were used.
