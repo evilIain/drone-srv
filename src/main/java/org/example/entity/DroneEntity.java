@@ -35,7 +35,7 @@ public class DroneEntity {
     private Model model;
 
     @NotNull
-    @Column(name = "weightLimit")
+    @Column(name = "weight_limit")
     private Integer weightLimit;
 
     @NotNull
