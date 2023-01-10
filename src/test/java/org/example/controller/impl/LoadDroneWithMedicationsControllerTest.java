@@ -153,4 +153,30 @@ public class LoadDroneWithMedicationsControllerTest extends BaseDroneControllerT
 
         assertTrue(response.message().startsWith("Battery capacity"));
     }
+
+    @Test
+    public void loadDroneWithMedicationsButCorruptCodeAndName() {
+
+        Medication medication = Medication.builder()
+                .code("abc123")
+                .name("Bandage!")
+                .weight(200)
+                .build();
+
+        final LoadDroneRequest request = LoadDroneRequest.builder()
+                .medications(List.of(medication))
+                .build();
+
+        final ResponseEntity<ErrorResponse> responseEntity = testRestTemplate.exchange(
+                CONTROLLER_URI + "/drone/" + lowBatteryDroneEntity.getId(),
+                HttpMethod.POST,
+                new HttpEntity<>(request),
+                new ParameterizedTypeReference<>() {});
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+
+        ErrorResponse response = responseEntity.getBody();
+        assertNotNull(response);
+        assertEquals(2, response.errors().size());
+    }
 }
