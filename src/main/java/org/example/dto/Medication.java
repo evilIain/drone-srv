@@ -4,16 +4,20 @@ import lombok.Builder;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Objects;
 
 
 public record Medication(
+
+        @Pattern(regexp = "^[0-9A-Za-z\\-_]+$", message = "not matching pattern. Only letters, numbers, `-`, `_` are allowed")
         String name,
 
         @NotNull
         Integer weight,
 
         @NotBlank
+        @Pattern(regexp = "^[0-9A-Z_]+$", message = "not matching pattern. Only upper letters, numbers, `_` are allowed")
         String code,
 
         byte[] image

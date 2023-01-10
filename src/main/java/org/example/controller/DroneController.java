@@ -26,7 +26,7 @@ public class DroneController {
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/drone/{droneId}")
-    public LoadDroneResponse loadDroneWithMedications(@RequestBody LoadDroneRequest request, @PathVariable String droneId) {
+    public LoadDroneResponse loadDroneWithMedications(@Valid @RequestBody LoadDroneRequest request, @PathVariable String droneId) {
         return droneProcessingService.loadDroneWithMedications(request, droneId);
     }
 

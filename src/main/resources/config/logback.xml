@@ -7,6 +7,24 @@
     <logger name="org.zalando.logbook.Logbook" level="trace"/>
     <logger name="org.testcontainers" level="info"/>
 
+    <appender name="rollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>src/main/resources/logs/check-battery-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>3GB</totalSizeCap>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>3MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>[%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger level="debug" name="rollingFileLogger">
+        <appender-ref ref="rollingFile"/>
+    </logger>
+
     <root level="info">
         <appender-ref ref="CONSOLE"/>
     </root>
